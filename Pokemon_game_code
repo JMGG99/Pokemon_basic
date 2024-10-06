@@ -1,0 +1,83 @@
+class Pokemon:
+    def __init__(self, name, type, strengths, weaknesses, atk, defense, speed, life_points, stamina):
+        self.name = name
+        self.type = type
+        self.strenghts = strengths
+        self.weaknesses = weaknesses
+        self.atk = atk
+        self.defense = defense
+        self.speed = speed
+        self.life_points = life_points
+        self.stamina = stamina
+
+    def attack(self, rival_pokemon,movement):
+        if self.strenghts in rival_pokemon.weaknesses:
+            self.atk = self.atk * 2
+        elif self.weaknesses in rival_pokemon.strenghts:
+            self.atk = self.atk * 0.5
+
+        if movement == 2:
+           if self.stamina >= 35:
+                self.atk = self.atk * 2
+                self.stamina = self.stamina - 35
+                print(f"{self.name} has used his special movement!")
+           else:
+               print(f"{self.name} stamina is too low to use that move!")
+        
+        damage = self.atk - rival_pokemon.defense
+
+        if damage > 0:
+            rival_pokemon.life_points = rival_pokemon.life_points - damage
+    
+    def Pokemon_center(self):
+        self.life_points = 100
+        self.stamina = 70
+        print("Your Pokemon is healthy again!")
+
+
+class Squirtle(Pokemon):
+    def __init__(self, name="Squirtle", type="Water", strengths=["Fire"], weaknesses=["Plant"], atk=80, defense=50, speed=40, life_points=100, stamina = 70):
+        super().__init__(name, type, strengths, weaknesses, atk, defense, speed, life_points,stamina)
+
+class Charmander(Pokemon):
+    def __init__(self, name="Charmander", type="Fire", strengths=["Plant"], weaknesses=["Water"], atk=100, defense=40, speed=30, life_points=100, stamina=70):
+        super().__init__(name, type, strengths, weaknesses, atk, defense, speed, life_points, stamina)
+
+
+class Bulbasaur(Pokemon):
+    def __init__(self, name="Bulbasaur", type="Plant", strengths=["Water"], weaknesses=["Fire"], atk=70, defense=100, speed=20, life_points=100, stamina=70):
+        super().__init__(name, type, strengths, weaknesses, atk, defense, speed, life_points, stamina)
+
+
+def fight(pokemon1, pokemon2):
+    if pokemon1.speed >= pokemon2.speed:
+        first, second = pokemon1, pokemon2
+    else:
+        first, second = pokemon2, pokemon1
+
+    turn = 0  
+
+    while first.life_points > 0 and second.life_points > 0:
+        print(f"\nTurn {turn + 1}:")
+        print(f"{first.name} HP: {first.life_points}, {second.name} HP: {second.life_points}")
+
+        movement = int(input(f"{first.name}, choose your move (1: Normal Attack, 2: Special Move): "))
+        first.attack(second, movement)
+
+        if second.life_points <= 0:
+            print(f"{second.name} has fainted! {first.name} wins!")
+            break
+
+        movement = int(input(f"{second.name}, choose your move (1: Normal Attack, 2: Special Move): "))
+        second.attack(first, movement)
+
+        if first.life_points <= 0:
+            print(f"{first.name} has fainted! {second.name} wins!")
+            break
+
+        turn += 1
+
+squirtle = Squirtle()
+charmander = Charmander()
+
+fight(squirtle, charmander)
